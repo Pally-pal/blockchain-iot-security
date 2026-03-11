@@ -1,0 +1,65 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract IoTDataRegistry {
+    struct DataRecord {
+        bytes32 dataHash;
+        address deviceAddress;
+        uint256 timestamp;
+        string deviceId;
+        bool exists;
+    }
+    
+    mapping(bytes32 => DataRecord) public dataRecords;
+    bytes32[] public registeredHashes;
+    
+    event DataRegistered(
+        bytes32 indexed dataHash,
+        address indexed deviceAddress,
+        string deviceId,
+        uint256 timestamp
+    );
+    
+    address public owner;
+    
+    constructor() {
+        owner = msg.sender;
+    }
+    
+    function registerData(bytes32 _dataHash, string memory _deviceId) public returns (bool) {
+        require(!dataRecords[_dataHash].exists, "Data already registered");
+        
+        DataRecord memory newRecord = DataRecord({
+            dataHash: _dataHash,
+            deviceAddress: msg.sender,
+            timestamp: block.timestamp,
+            deviceId: _deviceId,
+            exists: true
+        });
+        
+        dataRecords[_dataHash] = newRecord;
+        registeredHashes.push(_dataHash);
+        
+        emit DataRegistered(_dataHash, msg.sender, _deviceId, block.timestamp);
+        return true;
+    }
+    
+    function verifyData(bytes32 _dataHash) public view returns (bool) {
+        return dataRecords[_dataHash].exists;
+    }
+    
+    function getDataRecord(bytes32 _dataHash) public view returns (
+        bytes32 dataHash,
+        address deviceAddress,
+        uint256 timestamp,
+        string memory deviceId,
+        bool exists
+    ) {
+        DataRecord memory record = dataRecords[_dataHash];
+        return (record.dataHash, record.deviceAddress, record.timestamp, record.deviceId, record.exists);
+    }
+    
+    function getTotalRecords() public view returns (uint256) {
+        return registeredHashes.length;
+    }
+}

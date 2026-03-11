@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+blockchain_env/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Hardhat
+cache/
+artifacts/
+typechain/
+typechain-types/
+
+# Environment variables
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Data files (optional - remove if you want to include sample data)
+data/processed_iot_data.csv
+data/iot_features.csv
+
+# Results
+results/*.json
+
+# Contract artifacts (keep contract_info.json out for security)
+contract_info.json
+
+# Private keys and sensitive info
+*.key
+*.pem

@@ -1,0 +1,28 @@
+const hre = require("hardhat");
+const fs = require('fs');
+
+async function main() {
+    console.log("Deploying IoTDataRegistry contract...");
+    
+    const IoTDataRegistry = await hre.ethers.getContractFactory("IoTDataRegistry");
+    const contract = await IoTDataRegistry.deploy();
+    
+    await contract.deployed();
+    
+    console.log("Contract deployed to:", contract.address);
+    
+    const contractInfo = {
+        address: contract.address,
+        abi: JSON.parse(contract.interface.format('json'))
+    };
+    
+    fs.writeFileSync('./contract_info.json', JSON.stringify(contractInfo, null, 2));
+    console.log("Contract info saved to contract_info.json");
+}
+
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });

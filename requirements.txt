@@ -1,0 +1,28 @@
+# Core Python Libraries
+pandas==2.0.0
+numpy==1.24.0
+
+# Blockchain Libraries
+web3==6.0.0
+eth-account==0.8.0
+py-solc-x==1.1.1
+
+# API Libraries
+flask==2.3.0
+flask-cors==4.0.0
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Testing
+pytest==7.4.0
+pytest-cov==4.1.0
+
+# Performance & Visualization
+matplotlib==3.7.1
+seaborn==0.12.2
+
+# Development
+ipython==8.14.0
+jupyter==1.0.0

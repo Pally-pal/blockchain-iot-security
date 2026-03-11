@@ -1,0 +1,26 @@
+{
+  "original_shape": [
+    405184,
+    9
+  ],
+  "processed_shape": [
+    405184,
+    12
+  ],
+  "num_features": 8,
+  "feature_columns": [
+    "device_id",
+    "timestamp_unix",
+    "ts",
+    "co",
+    "humidity",
+    "lpg",
+    "smoke",
+    "temp"
+  ],
+  "num_devices": 3,
+  "time_range": {
+    "start": "2024-01-01 00:00:00",
+    "end": "2024-10-08 09:03:00"
+  }
+}
