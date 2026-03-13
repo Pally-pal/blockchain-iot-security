@@ -1,4 +1,4 @@
-# 🔐 Intelligent Blockchain System for Securing IoT Data
+# Intelligent Blockchain System for Securing IoT Data
 
 **Author:** Oyelade Paul Oluwafemi  
 **Matric No:** 2021/37014  
@@ -8,7 +8,7 @@
 
 ---
 
-## 📋 Project Overview
+##  Project Overview
 
 This project implements an **intelligent blockchain-based system for securing Internet of Things (IoT) data** using cryptographic hashing and Ethereum smart contracts. The system ensures data integrity, immutability, and tamper detection through blockchain technology and advanced cryptographic techniques.
 
@@ -17,7 +17,7 @@ Combines SHA-256 cryptographic hashing with Ethereum blockchain to create a dece
 
 ---
 
-## ✨ Features
+## Features
 
 - ✅ **SHA-256 Cryptographic Hashing** - Ensures data integrity through cryptographic verification
 - ✅ **Ethereum Blockchain Integration** - Immutable storage of data hashes on the blockchain
