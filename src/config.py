@@ -12,9 +12,6 @@ class Config:
     # Project Paths
     PROJECT_ROOT = Path(__file__).parent.parent.absolute()
     
-    # Dataset Path (Your actual dataset location)
-    DATASET_PATH = r"C:\Users\HP\Downloads\Paul's Final Year Project Documents\Blockchain_dataset\sensor_data.csv"
-    
     # Directory Paths
     DATA_DIR = PROJECT_ROOT / "data"
     RESULTS_DIR = PROJECT_ROOT / "results"
@@ -30,9 +27,9 @@ class Config:
     GANACHE_URL = "http://127.0.0.1:8545"
     NETWORK_ID = 1337
     
-    # Account Configuration (FROM YOUR GANACHE OUTPUT)
-    OWNER_ADDRESS = "0xB45e8457a2057493954963868CDA334Bf26B5014"
-    OWNER_PRIVATE_KEY = "0x1d63bcf56bacc9b26db10d9881afd44bb3f785fee2f56c876f0c0f7b8f22ed4e"
+    # Account Configuration (Ganache Default First Account - has 100 ETH by default)
+    OWNER_ADDRESS = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    OWNER_PRIVATE_KEY = "0x4f3edf983ac636a65a6d7ce1985193526755001ad6e02ab47dbead3b7f7386f2"
     
     # Smart Contract Configuration
     GAS_LIMIT = 3000000
@@ -62,8 +59,9 @@ class Config:
     @classmethod
     def validate_paths(cls):
         """Validate that critical paths exist"""
-        if not Path(cls.DATASET_PATH).exists():
-            raise FileNotFoundError(f"Dataset not found at: {cls.DATASET_PATH}")
+        # Sample data should exist for testing
+        if not cls.SAMPLE_DATA_FILE.exists():
+            raise FileNotFoundError(f"Sample data not found at: {cls.SAMPLE_DATA_FILE}")
         
         if not cls.CONTRACT_INFO_FILE.exists():
             raise FileNotFoundError(

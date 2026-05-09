@@ -338,12 +338,52 @@ def get_total_records():
             'error': str(e)
         }), 500
 
+@app.route('/api/search-device', methods=['POST'])
+def search_device():
+    """
+    Search for device records on blockchain
+    
+    Expected JSON:
+    {
+        "device_id": "DEVICE_001"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'device_id' not in data:
+            return jsonify({
+                'success': False,
+                'error': 'Missing device_id'
+            }), 400
+        
+        device_id = data.get('device_id')
+        
+        # Search blockchain for device records
+        result = security_system.blockchain.find_device_records(device_id)
+        
+        return jsonify({
+            'success': result.get('found', False),
+            'device_id': device_id,
+            'records': result.get('records', []),
+            'count': result.get('count', 0),
+            'message': result.get('message', ''),
+            'timestamp': datetime.now().isoformat()
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/stats', methods=['GET'])
 def get_statistics():
     """Get system statistics"""
     try:
         total_records = security_system.blockchain.get_total_records()
-        processed_records = len(security_system.hash_registry)
+        # Show total blockchain records (ground truth of successful registrations)
+        # not the API session's hash_registry (which is empty since API just serves data)
         
         balance = security_system.blockchain.w3.eth.get_balance(
             security_system.blockchain.account
@@ -354,7 +394,7 @@ def get_statistics():
             'success': True,
             'statistics': {
                 'total_blockchain_records': total_records,
-                'total_processed_records': processed_records,
+                'total_processed_records': total_records,  # Show blockchain records as "processed" (ground truth)
                 'account_balance': f'{balance_eth} ETH',
                 'contract_address': security_system.blockchain.contract_address,
                 'network_url': config.GANACHE_URL,

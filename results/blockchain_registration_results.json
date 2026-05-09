@@ -1,0 +1,502 @@
+[
+  {
+    "index": 0,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "932d45c00cf03480104866d2c8e9d46a2e10a22afdbd4fa68401da9fed7fecd9",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "575777c3cbe7010915c4504098d699df50dc69c304080eaa5c3cec08f955d317",
+      "block_number": 2,
+      "gas_used": 182479,
+      "data_hash": "932d45c00cf03480104866d2c8e9d46a2e10a22afdbd4fa68401da9fed7fecd9",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:08.758217",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594541627.3097534",
+      "co": "0.0048425281332327",
+      "humidity": "51.91875083661339",
+      "lpg": "0.0074921634626257",
+      "smoke": "0.0201314569877485",
+      "temp": "21.95525964276517"
+    }
+  },
+  {
+    "index": 1,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "2ef10cf01d974c28faff5db68b2b3baea50feddf6b9724f68fb8cdcb3393f4e3",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "88c1db613511dd521ee644fe2d2ac25a0da850c970c4179844512b2ae826f194",
+      "block_number": 3,
+      "gas_used": 165379,
+      "data_hash": "2ef10cf01d974c28faff5db68b2b3baea50feddf6b9724f68fb8cdcb3393f4e3",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:08.871311",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594924152.2845967",
+      "co": "0.0062548177836249",
+      "humidity": "52.90496127817649",
+      "lpg": "0.0090481818735635",
+      "smoke": "0.0244258694627704",
+      "temp": "22.054313280719388"
+    }
+  },
+  {
+    "index": 2,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "43babc9a6f9af1c103db598a91014a967d7abe7f7554cca6bd681f18de66fe3c",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "ef5dc185e21ef9bebcced0d7549449b54014efe5c9ecf26187ea55148d8625b4",
+      "block_number": 4,
+      "gas_used": 165379,
+      "data_hash": "43babc9a6f9af1c103db598a91014a967d7abe7f7554cca6bd681f18de66fe3c",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:08.962357",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594944759.744526",
+      "co": "0.0075655947277888",
+      "humidity": "52.36208857378684",
+      "lpg": "0.0104366260053977",
+      "smoke": "0.0283559945271497",
+      "temp": "21.78957953112489"
+    }
+  },
+  {
+    "index": 3,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "839ffe98e9a1fb062a4d299e1f416bc8640ecc975c253432f96b6b7fb369fffc",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "c8453b8646c32b3f8a96e4b11ade53a8e0e8b97769b0ba5a6eae1667a22b1344",
+      "block_number": 5,
+      "gas_used": 165379,
+      "data_hash": "839ffe98e9a1fb062a4d299e1f416bc8640ecc975c253432f96b6b7fb369fffc",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:09.088708",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1595184937.7837007",
+      "co": "0.0057787640755433",
+      "humidity": "52.04028089507522",
+      "lpg": "0.0085050148695404",
+      "smoke": "0.0226668212241495",
+      "temp": "22.388076672498187"
+    }
+  },
+  {
+    "index": 4,
+    "device_id": "1c:bf:ce:15:ec:4d",
+    "data_hash": "026ae84c5a9b3083978159b176dfffdaa133021b6ae47c78d893f20eadd4325e",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "1981a60defdd0cfa7e4907db541eccb0fc9b1b85ba0e7855da2bcc19a66f68df",
+      "block_number": 6,
+      "gas_used": 165379,
+      "data_hash": "026ae84c5a9b3083978159b176dfffdaa133021b6ae47c78d893f20eadd4325e",
+      "device_id": "1c:bf:ce:15:ec:4d"
+    },
+    "timestamp": "2026-05-07T23:34:09.199830",
+    "original_data": {
+      "device_id": "1c:bf:ce:15:ec:4d",
+      "timestamp_unix": "1704067",
+      "ts": "1594936981.8498788",
+      "co": "0.0041550634902774",
+      "humidity": "91.2241830441831",
+      "lpg": "0.0067913356397525",
+      "smoke": "0.017953212056677",
+      "temp": "23.706453413427457"
+    }
+  },
+  {
+    "index": 5,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "2551acda4f772049a7529fc7a61828d9d1cdc4fda217cfd5bb0133cd4a276df0",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "e054775dbb476e7ba4589de786b6e98a644443a8d71f3700df3c0974d0f8d5a8",
+      "block_number": 7,
+      "gas_used": 165379,
+      "data_hash": "2551acda4f772049a7529fc7a61828d9d1cdc4fda217cfd5bb0133cd4a276df0",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:10.316506",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594900305.2498918",
+      "co": "0.0060257868632051",
+      "humidity": "50.493863569908406",
+      "lpg": "0.0088971853612821",
+      "smoke": "0.0237865837242296",
+      "temp": "22.372572902112456"
+    }
+  },
+  {
+    "index": 6,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "e41fd9f15b31805edcf014a15f928e7a8c4579ddb0df492977d1d5b930ec86d9",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "21b6cdfca6a4c33074342e11c27323e3991fcec45e8d884ba3e9f039b6e86b28",
+      "block_number": 8,
+      "gas_used": 165379,
+      "data_hash": "e41fd9f15b31805edcf014a15f928e7a8c4579ddb0df492977d1d5b930ec86d9",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:10.407275",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594806807.3369658",
+      "co": "0.0050402908376259",
+      "humidity": "52.13751340080044",
+      "lpg": "0.0077305462513403",
+      "smoke": "0.02084987155227",
+      "temp": "22.366999163143024"
+    }
+  },
+  {
+    "index": 7,
+    "device_id": "00:0f:00:70:91:0a",
+    "data_hash": "1eb1cba1b410285b0127f3bc5f13857bd571892b355ccdaaa218339174089427",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "4aaee993577a41236cca5195aca8ae95ec5a3a3e570482a21334dd97579c7b21",
+      "block_number": 9,
+      "gas_used": 165379,
+      "data_hash": "1eb1cba1b410285b0127f3bc5f13857bd571892b355ccdaaa218339174089427",
+      "device_id": "00:0f:00:70:91:0a"
+    },
+    "timestamp": "2026-05-07T23:34:10.496819",
+    "original_data": {
+      "device_id": "00:0f:00:70:91:0a",
+      "timestamp_unix": "1704067",
+      "ts": "1595158480.108821",
+      "co": "0.0023957497046369",
+      "humidity": "76.6978391044459",
+      "lpg": "0.0044878367373471",
+      "smoke": "0.011582158244512",
+      "temp": "19.709569330525483"
+    }
+  },
+  {
+    "index": 8,
+    "device_id": "1c:bf:ce:15:ec:4d",
+    "data_hash": "c96b3f78de3a9844b8c0c6f4a2ccb395b88932bf6d1f3dc01b90708ca3086d46",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "e96fccb0b8a8190bd9ac504eace5300eff8e0be00fd84b37301acf2f34e16af0",
+      "block_number": 10,
+      "gas_used": 165379,
+      "data_hash": "c96b3f78de3a9844b8c0c6f4a2ccb395b88932bf6d1f3dc01b90708ca3086d46",
+      "device_id": "1c:bf:ce:15:ec:4d"
+    },
+    "timestamp": "2026-05-07T23:34:10.612811",
+    "original_data": {
+      "device_id": "1c:bf:ce:15:ec:4d",
+      "timestamp_unix": "1704067",
+      "ts": "1594620087.2845306",
+      "co": "0.0046306183048154",
+      "humidity": "59.36399530260173",
+      "lpg": "0.0072093887955186",
+      "smoke": "0.0191207978997234",
+      "temp": "24.491279073180856"
+    }
+  },
+  {
+    "index": 9,
+    "device_id": "00:0f:00:70:91:0a",
+    "data_hash": "3ba49625353e67cba19b35398b12af589596e8febab193aa3305c4696344c255",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "139bd695465374f62e12413b849a22b431cc5cc23440370a714bc03c264f9d44",
+      "block_number": 11,
+      "gas_used": 165379,
+      "data_hash": "3ba49625353e67cba19b35398b12af589596e8febab193aa3305c4696344c255",
+      "device_id": "00:0f:00:70:91:0a"
+    },
+    "timestamp": "2026-05-07T23:34:10.738797",
+    "original_data": {
+      "device_id": "00:0f:00:70:91:0a",
+      "timestamp_unix": "1704067",
+      "ts": "1595069939.7270885",
+      "co": "0.0030935299766543",
+      "humidity": "79.44687755472712",
+      "lpg": "0.0054330552399332",
+      "smoke": "0.0139769342853848",
+      "temp": "20.056353865700828"
+    }
+  },
+  {
+    "index": 10,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "f19db31138dd37bc26c7bf9998dc7441c0c6a5b3bf1abd66dd7f5550d3c4543b",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "98a1d8a100cb09ccb5d3624d0b7ec891a6f74867f160f838beed2171552b44ce",
+      "block_number": 12,
+      "gas_used": 165379,
+      "data_hash": "f19db31138dd37bc26c7bf9998dc7441c0c6a5b3bf1abd66dd7f5550d3c4543b",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:11.915582",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1595113640.9755692",
+      "co": "0.0060747524926532",
+      "humidity": "50.62449946565745",
+      "lpg": "0.0088611272764653",
+      "smoke": "0.0238674384379766",
+      "temp": "22.318026491812315"
+    }
+  },
+  {
+    "index": 11,
+    "device_id": "00:0f:00:70:91:0a",
+    "data_hash": "ce793cb1ffabd47b633eea49584adde63aab560c5d46512ce6875e411979610e",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "c9635efd5db57e7076f45678086f924f543a6b861580e04f3b37fa23df13c86a",
+      "block_number": 13,
+      "gas_used": 165379,
+      "data_hash": "ce793cb1ffabd47b633eea49584adde63aab560c5d46512ce6875e411979610e",
+      "device_id": "00:0f:00:70:91:0a"
+    },
+    "timestamp": "2026-05-07T23:34:11.999646",
+    "original_data": {
+      "device_id": "00:0f:00:70:91:0a",
+      "timestamp_unix": "1704067",
+      "ts": "1595134778.3436797",
+      "co": "0.003023315413494",
+      "humidity": "76.25512495960497",
+      "lpg": "0.0053215738087856",
+      "smoke": "0.0138822675877876",
+      "temp": "19.3787499054292"
+    }
+  },
+  {
+    "index": 12,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "f7dccb465884e6253fe4380f273914fc5923ef6cce0a31a3949cb2f19d779d67",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "cb748be175245f0f63a8fd87811678d4c80b3f542ba5a64af9a19147665d7f1a",
+      "block_number": 14,
+      "gas_used": 165379,
+      "data_hash": "f7dccb465884e6253fe4380f273914fc5923ef6cce0a31a3949cb2f19d779d67",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:12.076910",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704067",
+      "ts": "1594582386.6091611",
+      "co": "0.0052504521080598",
+      "humidity": "50.87441508999709",
+      "lpg": "0.0080008214855792",
+      "smoke": "0.021374476027494",
+      "temp": "21.99076138753896"
+    }
+  },
+  {
+    "index": 13,
+    "device_id": "00:0f:00:70:91:0a",
+    "data_hash": "96114b5397574dd4fb7fb2e546d3f6907811c38921fd97b254401eb6289996cc",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "0a7fa0748a80cec3f41c69f3e390662644dfb47715f15664d576c4e7787abe12",
+      "block_number": 15,
+      "gas_used": 165379,
+      "data_hash": "96114b5397574dd4fb7fb2e546d3f6907811c38921fd97b254401eb6289996cc",
+      "device_id": "00:0f:00:70:91:0a"
+    },
+    "timestamp": "2026-05-07T23:34:12.174342",
+    "original_data": {
+      "device_id": "00:0f:00:70:91:0a",
+      "timestamp_unix": "1704067",
+      "ts": "1594877045.02361",
+      "co": "0.0041384890652197",
+      "humidity": "74.91679091805626",
+      "lpg": "0.0067652868912534",
+      "smoke": "0.0178366792108462",
+      "temp": "19.368223713020456"
+    }
+  },
+  {
+    "index": 14,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "ed2e2cf9218a84cc738e873faf29a3e577507e2c70203ca4de0bb8dc1e32f281",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "17560980d14aa7f4e0fcd41587cc851091578e7dccfa8dc9a91af6c699cb8669",
+      "block_number": 16,
+      "gas_used": 165379,
+      "data_hash": "ed2e2cf9218a84cc738e873faf29a3e577507e2c70203ca4de0bb8dc1e32f281",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:12.253738",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1594732137.4677782",
+      "co": "0.004905847755476",
+      "humidity": "54.66720239695242",
+      "lpg": "0.0075333959090921",
+      "smoke": "0.0200863628638393",
+      "temp": "22.33624969765629"
+    }
+  },
+  {
+    "index": 15,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "728dd304992e946291c4b9c026ebed76b372d273ebbbbf0f96d558825a676fea",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "1ec958e30a6f5b9c242dcfffebab9741c1cb4147b5b6ad62c62d36c2d920713d",
+      "block_number": 17,
+      "gas_used": 165379,
+      "data_hash": "728dd304992e946291c4b9c026ebed76b372d273ebbbbf0f96d558825a676fea",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:13.384319",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1595186182.075894",
+      "co": "0.0056972342832923",
+      "humidity": "49.84522935709226",
+      "lpg": "0.0085216126488889",
+      "smoke": "0.0227539757120871",
+      "temp": "22.522982335101485"
+    }
+  },
+  {
+    "index": 16,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "9a8056c57e8a7adfe22fc4426ecdf18ff1df613e7ed97482783da38dfd73bbf3",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "985fbbdff9c2fb5da7860240401da1a5e47b0de55ceaeebb4779b90c246e119d",
+      "block_number": 18,
+      "gas_used": 165379,
+      "data_hash": "9a8056c57e8a7adfe22fc4426ecdf18ff1df613e7ed97482783da38dfd73bbf3",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:13.464310",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1594842473.1086693",
+      "co": "0.005083942135139",
+      "humidity": "50.66968293175832",
+      "lpg": "0.0077458167537899",
+      "smoke": "0.0208195450877931",
+      "temp": "23.23088099088677"
+    }
+  },
+  {
+    "index": 17,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "e4e9e253746b976070e9a2804da8aa836eefb6e76c76837631869e17251870e2",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "b20214538869864f13ec63e16401d491b4d0cf28222b6f2c11f4a8ee0047e138",
+      "block_number": 19,
+      "gas_used": 165379,
+      "data_hash": "e4e9e253746b976070e9a2804da8aa836eefb6e76c76837631869e17251870e2",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:13.543571",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1594714019.7747557",
+      "co": "0.0048428262536272",
+      "humidity": "52.192314069353046",
+      "lpg": "0.0076232615238278",
+      "smoke": "0.0201263642632184",
+      "temp": "22.428303876622984"
+    }
+  },
+  {
+    "index": 18,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "70870b02422eb830ddadf6e83f7e5d14733fe83a6ccc5420ef836b963a5c2c82",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "b5d38263b2cf684b96abfcd91796f942b8a684ced9aed3400c8c558b2ecfd961",
+      "block_number": 20,
+      "gas_used": 165379,
+      "data_hash": "70870b02422eb830ddadf6e83f7e5d14733fe83a6ccc5420ef836b963a5c2c82",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:13.622761",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1595072518.2667603",
+      "co": "0.0057402865352217",
+      "humidity": "49.96681854765722",
+      "lpg": "0.0084384065852823",
+      "smoke": "0.0228564724316336",
+      "temp": "22.20187105404182"
+    }
+  },
+  {
+    "index": 19,
+    "device_id": "b8:27:eb:bf:9d:51",
+    "data_hash": "31acc894b1bb4d9d45d6da60b56902f795108cb5a8990bb6ff06ed8dd493fcd7",
+    "blockchain_result": {
+      "success": true,
+      "duplicate": false,
+      "tx_hash": "137bddd20a50169526d2a768e349e76f8eb45ac60775d8cba112c33be9364eac",
+      "block_number": 21,
+      "gas_used": 165379,
+      "data_hash": "31acc894b1bb4d9d45d6da60b56902f795108cb5a8990bb6ff06ed8dd493fcd7",
+      "device_id": "b8:27:eb:bf:9d:51"
+    },
+    "timestamp": "2026-05-07T23:34:13.704323",
+    "original_data": {
+      "device_id": "b8:27:eb:bf:9d:51",
+      "timestamp_unix": "1704068",
+      "ts": "1594777153.7201817",
+      "co": "0.0053226701181352",
+      "humidity": "47.96751949000856",
+      "lpg": "0.0081257153006193",
+      "smoke": "0.0217080389012732",
+      "temp": "22.75274724840484"
+    }
+  }
+]

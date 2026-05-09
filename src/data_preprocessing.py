@@ -15,7 +15,7 @@ class IoTDataPreprocessor:
     Preprocesses IoT sensor data for blockchain security system
     """
     
-    def __init__(self):
+    def __init__(self, sample_size=20, randomize=True):
         # Your actual dataset path
         self.dataset_path = r"C:\Users\HP\Downloads\Paul's Final Year Project Documents\Blockchain_dataset\sensor_data.csv"
         
@@ -29,12 +29,16 @@ class IoTDataPreprocessor:
         self.df = None
         self.features_df = None
         self.original_shape = None
+        self.sample_size = sample_size
+        self.randomize = randomize
         
         print("=" * 70)
         print("IoT DATA PREPROCESSING MODULE")
         print("=" * 70)
         print(f"Dataset Path: {self.dataset_path}")
         print(f"Output Directory: {self.output_dir}")
+        print(f"Sample Size: {sample_size}")
+        print(f"Randomization: {'Enabled' if randomize else 'Disabled'}")
     
     def load_data(self):
         """Load dataset from CSV"""
@@ -46,6 +50,15 @@ class IoTDataPreprocessor:
             
             print(f"  ✓ Dataset loaded successfully")
             print(f"  ✓ Shape: {self.df.shape[0]} rows, {self.df.shape[1]} columns")
+            
+            # Sample data if requested
+            if self.sample_size and len(self.df) > self.sample_size:
+                self.df = self.df.sample(n=self.sample_size, random_state=None if self.randomize else 42)
+                print(f"  ✓ Sampled {self.sample_size} records (randomized)")
+            elif self.sample_size:
+                self.df = self.df.head(self.sample_size)
+                print(f"  ✓ Using {self.sample_size} records")
+            
             print(f"\n  Columns found:")
             for idx, col in enumerate(self.df.columns, 1):
                 print(f"    {idx}. {col}")
@@ -159,6 +172,41 @@ class IoTDataPreprocessor:
             self.df['device_id'] = np.random.choice(device_ids, size=len(self.df))
             print(f"  ✓ Created {num_devices} device IDs")
     
+    def add_data_variation(self):
+        """Add variation to numeric data to create unique hashes"""
+        if not self.randomize:
+            print("\n[Step 5b/7] Skipping variation (randomization disabled)")
+            return
+        
+        print("\n[Step 5b/7] Adding data variation for unique hashes...")
+        
+        # Find numeric columns (excluding timestamp_unix and device_id)
+        numeric_cols = self.df.select_dtypes(include=[np.number]).columns.tolist()
+        numeric_cols = [col for col in numeric_cols if col not in ['device_id', 'timestamp_unix']]
+        
+        if not numeric_cols:
+            print(f"  ⚠ No numeric columns to vary")
+            return
+        
+        # Add small random noise/variation to each numeric column
+        # This creates different values while keeping data realistic
+        for col in numeric_cols:
+            if col in self.df.columns:
+                try:
+                    # Calculate noise as 1-5% of the column's standard deviation
+                    col_std = self.df[col].std()
+                    if col_std > 0:
+                        noise_scale = col_std * np.random.uniform(0.01, 0.05)
+                        noise = np.random.normal(0, noise_scale, size=len(self.df))
+                        self.df[col] = self.df[col] + noise
+                        # Keep values in reasonable range (don't go below 0 for sensors)
+                        self.df[col] = self.df[col].clip(lower=0)
+                except Exception as e:
+                    print(f"  ⚠ Could not vary column '{col}': {str(e)}")
+        
+        print(f"  ✓ Added variation to {len(numeric_cols)} numeric columns")
+        print(f"    This ensures unique hashes for each run")
+    
     def extract_features(self):
         """Extract key features for blockchain registration"""
         print("\n[Step 6/7] Extracting features...")
@@ -238,6 +286,7 @@ class IoTDataPreprocessor:
             self.handle_missing_values()
             self.normalize_timestamps()
             self.add_device_identifiers()
+            self.add_data_variation()
             self.extract_features()
             self.save_processed_data()
             
@@ -254,7 +303,7 @@ class IoTDataPreprocessor:
             print(f"  2. iot_features.csv (features only)")
             print(f"  3. sample_iot_data.csv (first 100 records)")
             print(f"  4. preprocessing_summary.json (metadata)")
-            print("\n✅ Data is ready for blockchain registration!")
+            print("\n✓ Data is ready for blockchain registration!")
             print("=" * 70 + "\n")
             
             return self.df, self.features_df
@@ -267,5 +316,29 @@ class IoTDataPreprocessor:
 
 # Main execution
 if __name__ == "__main__":
-    preprocessor = IoTDataPreprocessor()
+    import sys
+    
+    # Parse command line arguments
+    sample_size = 20  # Default
+    randomize = True  # Default
+    
+    if len(sys.argv) > 1:
+        try:
+            sample_size = int(sys.argv[1])
+            print(f"Using sample size: {sample_size}")
+        except ValueError:
+            print(f"Invalid sample size: {sys.argv[1]}, using default: {sample_size}")
+    
+    if len(sys.argv) > 2:
+        randomize = sys.argv[2].lower() in ['true', '1', 'yes', 'random']
+        print(f"Randomization: {randomize}")
+    
+    # Initialize and run preprocessor
+    preprocessor = IoTDataPreprocessor(sample_size=sample_size, randomize=randomize)
     processed_df, features_df = preprocessor.preprocess_pipeline()
+    
+    print("\n💡 TIP: Run with different parameters:")
+    print("  python data_preprocessing.py 20         # 20 random records")
+    print("  python data_preprocessing.py 50         # 50 random records")
+    print("  python data_preprocessing.py 20 false   # 20 records (no variation)")
+    print("\nEach run with randomization enabled will generate different hashes!")

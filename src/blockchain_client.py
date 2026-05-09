@@ -44,7 +44,7 @@ class BlockchainClient:
                 "Make sure Ganache is running!"
             )
         
-        print(f"✓ Connected to blockchain: {config.GANACHE_URL}")
+        print(f"Connected to blockchain: {config.GANACHE_URL}")
         
         # Set default account
         self.account = config.OWNER_ADDRESS
@@ -117,6 +117,21 @@ class BlockchainClient:
             else:
                 hash_bytes = Web3.to_bytes(hexstr='0x' + data_hash)
             
+            # Check if hash already exists on blockchain (IMPORTANT - avoids duplicates)
+            try:
+                existing_record = self.contract.functions.getDataRecord(hash_bytes).call()
+                if existing_record[4]:  # exists field is True
+                    print(f"  ⊘ Data already registered (duplicate)")
+                    return {
+                        'success': False,
+                        'duplicate': True,
+                        'error': 'Data already registered on blockchain',
+                        'data_hash': data_hash,
+                        'device_id': device_id
+                    }
+            except Exception as check_err:
+                print(f"  ⚠ Warning: Could not check for duplicates: {str(check_err)}")
+            
             # Get nonce
             nonce = self.w3.eth.get_transaction_count(self.account)
             
@@ -157,6 +172,7 @@ class BlockchainClient:
             
             return {
                 'success': success,
+                'duplicate': False,
                 'tx_hash': tx_hash.hex(),
                 'block_number': tx_receipt['blockNumber'],
                 'gas_used': tx_receipt['gasUsed'],
@@ -165,10 +181,34 @@ class BlockchainClient:
             }
             
         except Exception as e:
-            print(f"  ✗ Registration failed: {str(e)}")
+            error_msg = str(e)
+            
+            # Provide user-friendly error messages
+            if 'insufficient funds' in error_msg.lower():
+                user_msg = "Account has insufficient balance. Please ensure your account has enough ETH to pay for transaction fees."
+            elif 'nonce too low' in error_msg.lower():
+                user_msg = "Transaction nonce error. Please try again."
+            elif 'already registered' in error_msg.lower():
+                user_msg = "This data has already been registered on the blockchain."
+                return {
+                    'success': False,
+                    'duplicate': True,
+                    'error': user_msg,
+                    'data_hash': data_hash,
+                    'device_id': device_id
+                }
+            elif 'out of gas' in error_msg.lower():
+                user_msg = "Transaction ran out of gas. Please try with a higher gas limit."
+            elif 'connection' in error_msg.lower() or 'connect' in error_msg.lower():
+                user_msg = "Failed to connect to blockchain. Please ensure Ganache is running on http://127.0.0.1:8545"
+            else:
+                user_msg = f"Registration error: {error_msg[:100]}"
+            
+            print(f"  ✗ Registration failed: {user_msg}")
             return {
                 'success': False,
-                'error': str(e),
+                'duplicate': False,
+                'error': user_msg,
                 'data_hash': data_hash,
                 'device_id': device_id
             }
@@ -220,10 +260,24 @@ class BlockchainClient:
     def get_total_records(self) -> int:
         """Get total number of registered records"""
         try:
-            return self.contract.functions.getTotalRecords().call()
-        except Exception as e:
-            print(f"Error getting total records: {str(e)}")
+            # Call the getTotalRecords function from the smart contract
+            total = self.contract.functions.getTotalRecords().call()
+            if isinstance(total, int):
+                return total
+            else:
+                # If not an integer, try to convert
+                return int(total)
+        except AttributeError as e:
+            print(f"✗ Contract method error (getTotalRecords not found): {str(e)}")
             return 0
+        except Exception as e:
+            print(f"✗ Error calling getTotalRecords(): {str(e)}")
+            # Try alternative: access registeredHashes length directly
+            try:
+                hashes_array = self.contract.functions.registeredHashes(0).call()
+                return len(hashes_array) if hashes_array else 0
+            except:
+                return 0
     
     def get_contract_owner(self) -> str:
         """Get contract owner address"""
@@ -232,6 +286,75 @@ class BlockchainClient:
         except Exception as e:
             print(f"Error getting owner: {str(e)}")
             return ""
+    
+    def find_device_records(self, device_id: str) -> Dict:
+        """
+        Find all blockchain records for a specific device ID
+        
+        Args:
+            device_id: Device identifier to search for
+            
+        Returns:
+            Dictionary with found records
+        """
+        try:
+            total_records = self.get_total_records()
+            found_records = []
+            
+            if total_records == 0:
+                return {
+                    'found': False,
+                    'device_id': device_id,
+                    'records': [],
+                    'message': 'No records found on blockchain'
+                }
+            
+            # Iterate through all registered hashes
+            for i in range(total_records):
+                try:
+                    # Get hash at index i
+                    data_hash = self.contract.functions.registeredHashes(i).call()
+                    
+                    # Get record details
+                    record = self.contract.functions.getDataRecord(data_hash).call()
+                    
+                    # record = (dataHash, deviceAddress, timestamp, deviceId, exists)
+                    if record[4] and record[3] == device_id:  # exists and device_id matches
+                        found_records.append({
+                            'data_hash': data_hash.hex(),
+                            'device_id': record[3],
+                            'device_address': record[1],
+                            'timestamp': record[2],
+                            'exists': record[4]
+                        })
+                except Exception as e:
+                    continue
+            
+            if found_records:
+                return {
+                    'found': True,
+                    'device_id': device_id,
+                    'records': found_records,
+                    'count': len(found_records),
+                    'message': f'Found {len(found_records)} record(s) for device {device_id}'
+                }
+            else:
+                return {
+                    'found': False,
+                    'device_id': device_id,
+                    'records': [],
+                    'message': f'No records found for device {device_id}'
+                }
+                
+        except Exception as e:
+            print(f"Error finding device records: {str(e)}")
+            return {
+                'found': False,
+                'device_id': device_id,
+                'records': [],
+                'error': str(e),
+                'message': 'Error searching blockchain for device records'
+            }
 
 # Example usage and testing
 if __name__ == "__main__":

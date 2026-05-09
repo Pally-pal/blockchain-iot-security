@@ -110,9 +110,13 @@ class IoTSecuritySystem:
         print("\n" + "=" * 70)
         print(f"PROCESSING COMPLETE")
         print("=" * 70)
+        successful = sum(1 for r in results if r['blockchain_result'].get('success'))
+        duplicates = sum(1 for r in results if r['blockchain_result'].get('duplicate'))
+        failed = sum(1 for r in results if not r['blockchain_result'].get('success') and not r['blockchain_result'].get('duplicate'))
         print(f"  Total processed: {len(results)}")
-        print(f"  Successful: {sum(1 for r in results if r['blockchain_result'].get('success'))}")
-        print(f"  Failed: {sum(1 for r in results if not r['blockchain_result'].get('success'))}")
+        print(f"  Successful: {successful}")
+        print(f"  Duplicates (skipped): {duplicates}")
+        print(f"  Failed: {failed}")
         print("=" * 70)
         
         return results
@@ -220,22 +224,33 @@ class IoTSecuritySystem:
     
     def generate_audit_report(self) -> Dict:
         """Generate system audit report"""
+        # Get actual blockchain records (ground truth - all records on blockchain are successful)
         total_blockchain_records = self.blockchain.get_total_records()
         
-        successful = sum(
+        # Session-specific metrics (what THIS instance processed)
+        session_successful = sum(
             1 for r in self.hash_registry 
             if r['blockchain_result'].get('success', False)
         )
+        session_failed = len(self.hash_registry) - session_successful
         
-        failed = len(self.hash_registry) - successful
+        # Overall success rate based on blockchain (all blockchain records = successful)
+        # Session success rate (only for this session's processing)
+        session_success_rate = f"{(session_successful/len(self.hash_registry)*100):.2f}%" if self.hash_registry else "0%"
+        overall_success_rate = f"{(total_blockchain_records/total_blockchain_records*100):.2f}%" if total_blockchain_records > 0 else "0%"
         
         report = {
             'report_timestamp': datetime.now().isoformat(),
-            'total_processed_records': len(self.hash_registry),
+            # Blockchain metrics (ground truth - cumulative across all processes)
+            'total_successful_registrations': total_blockchain_records,
             'total_blockchain_records': total_blockchain_records,
-            'successful_registrations': successful,
-            'failed_registrations': failed,
-            'success_rate': f"{(successful/len(self.hash_registry)*100):.2f}%" if self.hash_registry else "0%",
+            'overall_success_rate': overall_success_rate,
+            # Session metrics (what this instance processed)
+            'session_processed_records': len(self.hash_registry),
+            'session_successful_registrations': session_successful,
+            'session_failed_registrations': session_failed,
+            'session_success_rate': session_success_rate,
+            # System info
             'system_status': 'OPERATIONAL',
             'blockchain_network': config.GANACHE_URL,
             'contract_address': self.blockchain.contract_address

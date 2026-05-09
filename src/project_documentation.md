@@ -216,7 +216,6 @@ Place your dataset path and Ganache credentials in `src/config.py`.
 ```bash
 # Start Ganache (keep running)
 ganache-cli --port 8545 --networkId 1337 --accounts 10
-
 # In new terminal, compile and deploy
 npx hardhat compile
 npx hardhat run scripts/deploy.js --network localhost
