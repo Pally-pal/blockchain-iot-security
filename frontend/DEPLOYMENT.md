@@ -1,8 +1,141 @@
-# Deployment Guide - IoT Blockchain Security Frontend
+# Deployment Guide - IoT Blockchain Security System
 
-This guide explains how to deploy and run the frontend with your API.
+This guide explains how to deploy and run the complete system (Frontend, API, and Blockchain).
 
-## Quick Start
+## Table of Contents
+1. [Docker Deployment (Recommended)](#docker-deployment)
+2. [Local Development](#local-development)
+3. [Production Deployment](#production-deployment)
+4. [Troubleshooting](#troubleshooting)
+
+---
+
+## Docker Deployment (Recommended)
+
+### Prerequisites
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+- 4GB RAM minimum
+- 20GB disk space
+
+### Quick Start with Docker
+
+#### 1. Clone and Navigate to Project
+```bash
+cd blockchain-iot-security
+```
+
+#### 2. Build Docker Images
+```bash
+# Build all services
+docker-compose build
+
+# Or build specific services
+docker-compose build api frontend ganache
+```
+
+#### 3. Start All Services
+```bash
+# Start services in background
+docker-compose up -d
+
+# Or run in foreground to see logs
+docker-compose up
+```
+
+#### 4. Verify Services
+```bash
+# Check service status
+docker-compose ps
+
+# View logs
+docker-compose logs -f api
+docker-compose logs -f frontend
+docker-compose logs -f ganache
+```
+
+#### 5. Access the System
+- **Frontend:** http://localhost:8000
+- **API:** http://localhost:5000
+- **API Docs:** http://localhost:5000/api/docs
+- **Blockchain (Ganache):** http://localhost:8545
+
+#### 6. Stop Services
+```bash
+# Stop all services
+docker-compose down
+
+# Stop and remove volumes
+docker-compose down -v
+```
+
+### Docker Compose Services
+
+**Service 1: Ganache (Blockchain)**
+- Image: `trufflesuite/ganache:latest`
+- Port: 8545
+- Volume: `ganache_data:/ganache_data` (persistent blockchain data)
+- Auto-generates 10 Ethereum accounts with 100 ETH each
+- Deterministic mode for reproducibility
+
+**Service 2: API Server**
+- Dockerfile: `Dockerfile.api`
+- Port: 5000
+- Dependencies: Ganache
+- Health Check: Every 30s
+- Environment: Production mode
+
+**Service 3: Frontend**
+- Dockerfile: `Dockerfile.frontend`
+- Port: 8000
+- Dependencies: API Server
+- Health Check: Every 30s
+- Serves on Python HTTP server
+
+### Docker Environment Variables
+
+Create `.env` file for custom configuration:
+
+```env
+# Blockchain
+GANACHE_URL=http://ganache:8545
+NETWORK_ID=1337
+
+# API
+API_HOST=0.0.0.0
+API_PORT=5000
+API_HOST_EXTERNAL=http://localhost:5000
+FLASK_ENV=production
+
+# Frontend
+FRONTEND_PORT=8000
+FRONTEND_HOST=0.0.0.0
+```
+
+### Scaling Docker Services
+
+```bash
+# Scale API instances behind a load balancer
+docker-compose up -d --scale api=3
+
+# Scale frontend instances
+docker-compose up -d --scale frontend=2
+```
+
+### Docker Network
+
+Services communicate via `iot-blockchain-network`:
+- `ganache:8545` - Blockchain endpoint
+- `api:5000` - API server
+- `frontend:8000` - Frontend server
+
+All services can resolve each other by hostname within the container network.
+
+---
+
+## Local Development
+
+### Quick Start
 
 ### Option 1: Direct Browser Access (File Protocol)
 

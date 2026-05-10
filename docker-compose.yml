@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Ganache Blockchain Service
+  ganache:
+    image: trufflesuite/ganache:latest
+    container_name: iot-blockchain-ganache
+    ports:
+      - "8545:8545"
+    command:
+      - --host=0.0.0.0
+      - --port=8545
+      - --network-id=1337
+      - --accounts=10
+      - --deterministic
+      - --db=/ganache_data
+    volumes:
+      - ganache_data:/ganache_data
+    environment:
+      - MNEMONIC=test test test test test test test test test test test junk
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8545"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - iot-blockchain-network
+
+  # API Server Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: iot-blockchain-api
+    ports:
+      - "5000:5000"
+    depends_on:
+      ganache:
+        condition: service_healthy
+    environment:
+      - GANACHE_URL=http://ganache:8545
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./results:/app/results
+      - ./contract_info.json:/app/contract_info.json
+    networks:
+      - iot-blockchain-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: iot-blockchain-frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - api
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./frontend:/app
+    networks:
+      - iot-blockchain-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  ganache_data:
+    driver: local
+
+networks:
+  iot-blockchain-network:
+    driver: bridge
