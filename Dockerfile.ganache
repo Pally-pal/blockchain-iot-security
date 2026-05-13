@@ -1,0 +1,36 @@
+# Dockerfile for Ganache Blockchain
+FROM node:20-slim
+
+# Install Ganache globally
+RUN npm install -g ganache
+
+# Create app directory
+WORKDIR /app
+
+# Copy hardhat config if using custom Ganache settings
+COPY hardhat.config.js ./
+
+# Expose Ganache port
+EXPOSE 8545
+
+# Set environment variables
+ENV GANACHE_HOST=0.0.0.0
+ENV GANACHE_PORT=8545
+ENV GANACHE_DETERMINISTIC=true
+ENV GANACHE_ACCOUNTS=10
+ENV GANACHE_ACCOUNT_BALANCE=100000000000000000000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "const http = require('http'); http.get('http://localhost:8545', (res) => { if (res.statusCode === 200) process.exit(0); else process.exit(1); }).on('error', () => process.exit(1));"
+
+# Run Ganache with deterministic accounts for consistent testing
+CMD ["ganache", \
+     "--host", "0.0.0.0", \
+     "--port", "8545", \
+     "--deterministic", \
+     "--accounts", "10", \
+     "--account-balance", "100000000000000000000", \
+     "--chain.allowUnlimitedContractSize", \
+     "--chain.asyncRequestProcessing", "true", \
+     "--miner.blockGasLimit", "30000000"]

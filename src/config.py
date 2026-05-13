@@ -28,8 +28,8 @@ class Config:
     NETWORK_ID = 1337
     
     # Account Configuration (Ganache Default First Account - has 100 ETH by default)
-    OWNER_ADDRESS = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
-    OWNER_PRIVATE_KEY = "0x4f3edf983ac636a65a6d7ce1985193526755001ad6e02ab47dbead3b7f7386f2"
+    OWNER_ADDRESS = "0xB301253550f753Cbe4f8bA8456A836B41499C990"
+    OWNER_PRIVATE_KEY = "0x79f00496a7382d5bddcb779cb4873c82855ac350b1deb7e11af678ea89b3cc71"
     
     # Smart Contract Configuration
     GAS_LIMIT = 3000000

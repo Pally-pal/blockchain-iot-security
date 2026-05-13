@@ -637,40 +637,6 @@ async function handleVerifyDevice(e) {
         showAlert('Error searching for device: ' + error.message, 'danger');
     }
 }
-            
-            recordsHtml += `
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-            
-            resultDiv.innerHTML = recordsHtml;
-            showAlert(`Found ${deviceRecords.length} record(s) for device ${deviceId}`, 'success');
-        } else {
-            resultDiv.innerHTML = `
-                <div class="result-box error">
-                    <h6 class="text-warning mb-2">
-                        <i class="bi bi-info-circle"></i> Device Not Found
-                    </h6>
-                    <p>No registered data found for device: <strong>${deviceId}</strong></p>
-                    <p class="small text-muted">The device may not have any registered blockchain records yet.</p>
-                </div>
-            `;
-            showAlert(`No records found for device ${deviceId}`, 'info');
-        }
-    } catch (error) {
-        console.error('Device verification error:', error);
-        resultDiv.innerHTML = `
-            <div class="result-box error">
-                <h6 class="text-danger mb-2">
-                    <i class="bi bi-exclamation-circle"></i> Search Error
-                </h6>
-                <p>${error.message}</p>
-            </div>
-        `;
-    }
-}
 
 // ============================================================================
 // HASH GENERATOR
@@ -707,7 +673,19 @@ async function handleHash(e) {
                     <label class="form-label">SHA-256 Hash:</label>
                     <div class="hash-display mb-3">${data.hash}</div>
                     <table class="table table-sm table-borderless">
-                        <tr>
+                        <tr>                        # 1. Navigate to project
+                        cd blockchain-iot-security
+                        
+                        # 2. Build all services
+                        docker-compose build
+                        
+                        # 3. Start all services
+                        docker-compose up -d
+                        
+                        # 4. Access the system
+                        # Frontend: http://localhost:8000
+                        # API: http://localhost:5000
+                        # API Docs: http://localhost:5000/api/docs
                             <td><strong>Algorithm:</strong></td>
                             <td>${data.algorithm}</td>
                         </tr>
