@@ -1,35 +1,32 @@
 services:
-  - type: web
+  - type: worker
     name: iot-blockchain-ganache
-    env: docker
+    runtime: docker
     plan: standard
     dockerfilePath: ./Dockerfile.ganache
     dockerContext: ./
-    healthCheckPath: /
-    healthCheckInterval: 30
-    ports:
-      - port: 8545
-        protocol: http
+    region: ohio
+    autoDeploy: true
     envVars:
       - key: GANACHE_HOST
         value: 0.0.0.0
       - key: GANACHE_PORT
-        value: 8545
-    autoDeploy: true
-    region: ohio
+        value: "8545"
+      - key: PORT
+        value: "8545"
 
   - type: web
     name: iot-blockchain-api
-    env: docker
+    runtime: docker
     plan: standard
     dockerfilePath: ./Dockerfile.api
     dockerContext: ./
     healthCheckPath: /api/health
-    healthCheckInterval: 30
-    ports:
-      - port: 5000
-        protocol: http
+    region: ohio
+    autoDeploy: true
     envVars:
+      - key: PORT
+        value: "5000"
       - key: FLASK_ENV
         value: production
       - key: FLASK_APP
@@ -40,33 +37,26 @@ services:
         value: INFO
       - key: PYTHONUNBUFFERED
         value: "1"
-    depends:
-      - service: iot-blockchain-ganache
-        type: service
-    autoDeploy: true
-    region: ohio
 
   - type: web
     name: iot-blockchain-frontend
-    env: docker
+    runtime: docker
     plan: standard
     dockerfilePath: ./Dockerfile.frontend
     dockerContext: ./
     healthCheckPath: /
-    healthCheckInterval: 30
-    ports:
-      - port: 8000
-        protocol: http
+    region: ohio
+    autoDeploy: true
     envVars:
+      - key: PORT
+        value: "8000"
       - key: API_URL
-        value: https://iot-blockchain-api.onrender.com
+        fromService:
+          name: iot-blockchain-api
+          type: web
+          property: hostport
       - key: PYTHONUNBUFFERED
         value: "1"
-    depends:
-      - service: iot-blockchain-api
-        type: service
-    autoDeploy: true
-    region: ohio
 
 databases:
   - name: iot-blockchain-postgres
