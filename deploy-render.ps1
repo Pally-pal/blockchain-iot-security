@@ -42,20 +42,26 @@ function Write-Error {
 }
 
 ##############################################################################
-# Check Prerequisites
+# Test Prerequisites
 ##############################################################################
 
-function Check-Prerequisites {
+function Test-Prerequisites {
     Write-Info "Checking prerequisites..."
-    
-    # Check for Docker
-    $dockerCheck = docker --version 2>$null
-    if (-not $dockerCheck) {
-        Write-Error "Docker is required but not installed"
-        exit 1
+
+    # Check for Docker (only needed if building images locally)
+    if (-not $SkipBuild) {
+        $dockerCheck = docker --version 2>$null
+        if (-not $dockerCheck) {
+            Write-Warning "Docker not found - run with -SkipBuild to skip local image building"
+            Write-Warning "Render will build Docker images automatically from your Dockerfiles"
+            exit 1
+        }
+        Write-Success "Docker found: $dockerCheck"
     }
-    Write-Success "Docker found: $dockerCheck"
-    
+    else {
+        Write-Info "Skipping Docker check (SkipBuild enabled)"
+    }
+
     # Check for Git
     $gitCheck = git --version 2>$null
     if (-not $gitCheck) {
@@ -63,7 +69,7 @@ function Check-Prerequisites {
         exit 1
     }
     Write-Success "Git found"
-    
+
     # Check for Render API key
     if (-not $RENDER_API_KEY) {
         Write-Error "RENDER_API_KEY environment variable not set"
@@ -72,26 +78,26 @@ function Check-Prerequisites {
         exit 1
     }
     Write-Success "Render API key configured"
-    
+
     Write-Success "All prerequisites met`n"
 }
 
 ##############################################################################
-# Build Docker Images
+# Invoke Docker Image Build
 ##############################################################################
 
-function Build-DockerImages {
+function Invoke-DockerImageBuild {
     Write-Info "Building Docker images..."
-    
+
     try {
         Write-Info "Building Ganache image..."
         docker build -f Dockerfile.ganache -t "${PROJECT_NAME}-ganache:latest" . | Out-Null
         Write-Success "Ganache image built"
-        
+
         Write-Info "Building API image..."
         docker build -f Dockerfile.api -t "${PROJECT_NAME}-api:latest" . | Out-Null
         Write-Success "API image built"
-        
+
         Write-Info "Building Frontend image..."
         docker build -f Dockerfile.frontend -t "${PROJECT_NAME}-frontend:latest" . | Out-Null
         Write-Success "Frontend image built`n"
@@ -103,12 +109,12 @@ function Build-DockerImages {
 }
 
 ##############################################################################
-# Git Workflow
+# Invoke Git Deploy
 ##############################################################################
 
-function Git-PushAndDeploy {
+function Invoke-GitDeploy {
     Write-Info "Preparing git for deployment..."
-    
+
     try {
         # Check git status
         $status = git status --porcelain
@@ -128,7 +134,7 @@ function Git-PushAndDeploy {
         else {
             Write-Info "Working directory is clean"
         }
-        
+
         # Get current branch
         $branch = git rev-parse --abbrev-ref HEAD
         Write-Info "Pushing branch: $branch"
@@ -148,43 +154,43 @@ function Git-PushAndDeploy {
 
 function Set-EnvironmentVariables {
     Write-Info "Configuring environment variables..."
-    
+
     $envVars = @{
-        "FLASK_ENV" = "production"
-        "FLASK_APP" = "src/api_server_complete.py"
-        "BLOCKCHAIN_RPC_URL" = "http://iot-blockchain-ganache:8545"
-        "API_URL" = "https://iot-blockchain-api.onrender.com"
-        "LOG_LEVEL" = "INFO"
-        "PYTHONUNBUFFERED" = "1"
+        "FLASK_ENV"           = "production"
+        "FLASK_APP"           = "src/api_server_complete.py"
+        "BLOCKCHAIN_RPC_URL"  = "http://iot-blockchain-ganache:8545"
+        "API_URL"             = "https://iot-blockchain-api.onrender.com"
+        "LOG_LEVEL"           = "INFO"
+        "PYTHONUNBUFFERED"    = "1"
     }
-    
+
     foreach ($key in $envVars.Keys) {
         Write-Info "Setting: $key = $($envVars[$key])"
     }
-    
+
     Write-Success "Environment variables configured`n"
 }
 
 ##############################################################################
-# Health Checks
+# Test Deployment Health
 ##############################################################################
 
-function Check-DeploymentHealth {
+function Test-DeploymentHealth {
     if ($SkipHealthCheck) {
         Write-Warning "Skipping health checks"
         return $true
     }
-    
+
     Write-Info "Checking deployment health..."
-    
+
     $maxAttempts = 30
     $attempt = 0
     $apiUrl = "https://iot-blockchain-api.onrender.com/api/health"
     $frontendUrl = "https://iot-blockchain-frontend.onrender.com"
-    
+
     while ($attempt -lt $maxAttempts) {
         Write-Info "Health check attempt $($attempt + 1)/$maxAttempts"
-        
+
         try {
             $apiResponse = Invoke-WebRequest -Uri $apiUrl -ErrorAction SilentlyContinue
             $apiStatus = $apiResponse.StatusCode
@@ -192,7 +198,7 @@ function Check-DeploymentHealth {
         catch {
             $apiStatus = "000"
         }
-        
+
         try {
             $frontendResponse = Invoke-WebRequest -Uri $frontendUrl -ErrorAction SilentlyContinue
             $frontendStatus = $frontendResponse.StatusCode
@@ -200,30 +206,30 @@ function Check-DeploymentHealth {
         catch {
             $frontendStatus = "000"
         }
-        
+
         if ($apiStatus -eq 200 -and $frontendStatus -eq 200) {
             Write-Success "All services are healthy`n"
             return $true
         }
-        
+
         Write-Warning "API Status: $apiStatus, Frontend Status: $frontendStatus"
         Start-Sleep -Seconds 10
         $attempt++
     }
-    
+
     Write-Error "Deployment health check failed after $maxAttempts attempts"
     return $false
 }
 
 ##############################################################################
-# Deployment Summary
+# Show Deployment Summary
 ##############################################################################
 
-function Print-DeploymentSummary {
+function Show-DeploymentSummary {
     Write-Host ""
-    Write-Host "╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║          Deployment Complete - Service URLs                   ║" -ForegroundColor Green
-    Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+    Write-Host "================================================================" -ForegroundColor Green
+    Write-Host "         Deployment Complete - Service URLs" -ForegroundColor Green
+    Write-Host "================================================================" -ForegroundColor Green
     Write-Host ""
     Write-Host "Frontend:  " -ForegroundColor Cyan -NoNewline
     Write-Host "https://iot-blockchain-frontend.onrender.com"
@@ -252,15 +258,15 @@ function Print-DeploymentSummary {
 function Main {
     Write-Host ""
     Write-Info "Starting Render deployment for $PROJECT_NAME`n"
-    
+
     # Step 1: Check prerequisites
-    Check-Prerequisites
-    
+    Test-Prerequisites
+
     # Step 2: Show dry-run status
     if ($DryRun) {
         Write-Warning "Running in DRY RUN mode - no changes will be made`n"
     }
-    
+
     # Step 3: Confirm deployment
     Write-Warning "This will deploy to Render.com"
     $confirm = Read-Host "Continue with deployment? (y/n)"
@@ -269,41 +275,41 @@ function Main {
         exit 0
     }
     Write-Host ""
-    
+
     # Step 4: Build Docker images (optional)
     if (-not $SkipBuild) {
         $buildConfirm = Read-Host "Build Docker images? (y/n)"
         if ($buildConfirm -eq "y") {
-            Build-DockerImages
+            Invoke-DockerImageBuild
         }
     }
-    
+
     # Step 5: Git push
     if (-not $DryRun) {
-        if (-not (Git-PushAndDeploy)) {
+        if (-not (Invoke-GitDeploy)) {
             exit 1
         }
     }
     else {
         Write-Warning "[DRY RUN] Would push to Git repository"
     }
-    
+
     # Step 6: Set environment variables
     Set-EnvironmentVariables
-    
+
     # Step 7: Health checks (optional)
     if (-not $SkipHealthCheck) {
         $healthCheck = Read-Host "Run health checks? (y/n)"
         if ($healthCheck -eq "y") {
             Write-Info "Waiting 30 seconds for services to start..."
             Start-Sleep -Seconds 30
-            Check-DeploymentHealth
+            Test-DeploymentHealth
         }
     }
-    
+
     # Print summary
-    Print-DeploymentSummary
-    
+    Show-DeploymentSummary
+
     Write-Success "Deployment process completed!"
 }
 
