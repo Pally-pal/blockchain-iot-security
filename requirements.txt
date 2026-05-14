@@ -1,6 +1,6 @@
 # Core Python Libraries
 pandas==2.0.0
-numpy==1.24.0
+numpy==1.25.0
 
 # Blockchain Libraries
 web3==6.0.0
@@ -21,8 +21,7 @@ pytest-cov==4.1.0
 
 # Performance & Visualization
 matplotlib==3.7.1
-seaborn==0.12.2
-
+seaborn==0.13.0
 # Development
 ipython==8.14.0
 jupyter==1.0.0
