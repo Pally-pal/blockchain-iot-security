@@ -24,12 +24,13 @@ class Config:
     SAMPLE_DATA_FILE = DATA_DIR / "sample_iot_data.csv"
     
     # Blockchain Network Configuration
-    GANACHE_URL = "http://127.0.0.1:8545"
-    NETWORK_ID = 1337
+    # FIX: Read from environment variable with fallback for local development
+    GANACHE_URL = os.getenv("GANACHE_URL", "http://127.0.0.1:8545")
+    NETWORK_ID = int(os.getenv("NETWORK_ID", 1337))
     
     # Account Configuration (Ganache Default First Account - has 100 ETH by default)
-    OWNER_ADDRESS = "0xB301253550f753Cbe4f8bA8456A836B41499C990"
-    OWNER_PRIVATE_KEY = "0x79f00496a7382d5bddcb779cb4873c82855ac350b1deb7e11af678ea89b3cc71"
+    OWNER_ADDRESS = os.getenv("OWNER_ADDRESS", "0xB301253550f753Cbe4f8bA8456A836B41499C990")
+    OWNER_PRIVATE_KEY = os.getenv("OWNER_PRIVATE_KEY", "0x79f00496a7382d5bddcb779cb4873c82855ac350b1deb7e11af678ea89b3cc71")
     
     # Smart Contract Configuration
     GAS_LIMIT = 3000000
@@ -83,7 +84,6 @@ if __name__ == "__main__":
     print("CONFIGURATION SETTINGS")
     print("=" * 70)
     print(f"Project Root: {config.PROJECT_ROOT}")
-    print(f"Dataset Path: {config.DATASET_PATH}")
     print(f"Ganache URL: {config.GANACHE_URL}")
     print(f"Owner Address: {config.OWNER_ADDRESS}")
     print(f"Contract Info: {config.CONTRACT_INFO_FILE}")
