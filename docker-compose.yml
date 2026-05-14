@@ -14,17 +14,18 @@ services:
       - --accounts=10
       - --deterministic
       - --db=/ganache_data
+      - --mnemonic="test test test test test test test test test test test junk"
     volumes:
       - ganache_data:/ganache_data
-    environment:
-      - MNEMONIC=test test test test test test test test test test test junk
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8545"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
     networks:
       - iot-blockchain-network
+    restart: unless-stopped
 
   # API Server Service
   api:
@@ -38,23 +39,30 @@ services:
       ganache:
         condition: service_healthy
     environment:
+      # FIX: Use service name instead of localhost for Docker networking
       - GANACHE_URL=http://ganache:8545
+      - NETWORK_ID=1337
       - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
+      # Account from Ganache deterministic mnemonic
+      - OWNER_ADDRESS=0x8ba1f109551bD432803012645Ac136ddd64DBA72
+      - OWNER_PRIVATE_KEY=0xdf57089f0ede37e44972d5af0ce6f0fb13324d82b8244d3fcb63f2a8d0aed241
     volumes:
       - ./src:/app/src
       - ./data:/app/data
       - ./logs:/app/logs
       - ./results:/app/results
       - ./contract_info.json:/app/contract_info.json
+      - ./contracts:/app/contracts
     networks:
       - iot-blockchain-network
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/health')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/health', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
 
   # Frontend Service
   frontend:
@@ -65,9 +73,11 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     environment:
       - PYTHONUNBUFFERED=1
+      - API_URL=http://api:5000
     volumes:
       - ./frontend:/app
     networks:
@@ -77,7 +87,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
+    restart: unless-stopped
 
 volumes:
   ganache_data:
