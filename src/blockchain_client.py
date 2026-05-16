@@ -35,8 +35,11 @@ class BlockchainClient:
         print("=" * 70)
         
         # Connect to Ganache
-        self.w3 = Web3(Web3.HTTPProvider(config.GANACHE_URL))
-        
+import os
+from web3 import Web3
+
+blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
+self.w3 = Web3(Web3.HTTPProvider(blockchain_url))        
         # Verify connection
         if not self.w3.is_connected():
             raise ConnectionError(
