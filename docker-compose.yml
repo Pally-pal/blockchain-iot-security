@@ -1,22 +1,23 @@
 version: '3.8'
 
 services:
-  # Ganache Blockchain Service
+  # Ganache Blockchain Service - Using official image
   ganache:
     image: trufflesuite/ganache:latest
     container_name: iot-blockchain-ganache
     ports:
       - "8545:8545"
-    command:
-      - --host=0.0.0.0
-      - --port=8545
-      - --network-id=1337
-      - --accounts=10
-      - --deterministic
-      - --db=/ganache_data
-      - --mnemonic="test test test test test test test test test test test junk"
-    volumes:
-      - ganache_data:/ganache_data
+    environment:
+      # Ganache environment setup
+      - MNEMONIC=test test test test test test test test test test test junk
+    command: >
+      ganache
+      --host 0.0.0.0
+      --port 8545
+      --deterministic
+      --mnemonic "test test test test test test test test test test test junk"
+      --accounts 10
+      --chain-id 1337
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8545"]
       interval: 5s
@@ -27,7 +28,7 @@ services:
       - iot-blockchain-network
     restart: unless-stopped
 
-  # API Server Service
+  # Python API Backend
   api:
     build:
       context: .
@@ -39,14 +40,11 @@ services:
       ganache:
         condition: service_healthy
     environment:
-      # FIX: Use service name instead of localhost for Docker networking
+      # CRITICAL: Use service name, not localhost
       - GANACHE_URL=http://ganache:8545
       - NETWORK_ID=1337
       - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
-      # Account from Ganache deterministic mnemonic
-      - OWNER_ADDRESS=0x8ba1f109551bD432803012645Ac136ddd64DBA72
-      - OWNER_PRIVATE_KEY=0xdf57089f0ede37e44972d5af0ce6f0fb13324d82b8244d3fcb63f2a8d0aed241
     volumes:
       - ./src:/app/src
       - ./data:/app/data
@@ -61,10 +59,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 40s
     restart: unless-stopped
 
-  # Frontend Service
+  # Frontend Dashboard
   frontend:
     build:
       context: .
@@ -76,14 +74,14 @@ services:
       api:
         condition: service_healthy
     environment:
-      - PYTHONUNBUFFERED=1
       - API_URL=http://api:5000
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./frontend:/app
     networks:
       - iot-blockchain-network
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000')"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8000"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -4,10 +4,16 @@ Configuration file for IoT Blockchain Security System
 """
 
 import os
-from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 class Config:
-    """System Configuration"""
+    GANACHE_URL = os.getenv("ALCHEMY_URL")  # now points to Sepolia
+    OWNER_ADDRESS = os.getenv("OWNER_ADDRESS")
+    OWNER_PRIVATE_KEY = os.getenv("PRIVATE_KEY")
+    CONTRACT_ADDRESS = os.getenv("CONTRACT_ADDRESS")
+    API_HOST = "0.0.0.0"
+    API_PORT = int(os.getenv("PORT", 5000))
     
     # Project Paths
     PROJECT_ROOT = Path(__file__).parent.parent.absolute()

@@ -9,6 +9,7 @@ __pycache__
 *$py.class
 *.so
 .Python
+blockchain_env
 env/
 venv/
 ENV/
