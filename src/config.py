@@ -4,6 +4,7 @@ Configuration file for IoT Blockchain Security System
 """
 
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
