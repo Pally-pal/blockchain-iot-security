@@ -4,6 +4,7 @@ Blockchain client for interacting with Ethereum smart contracts
 Handles Web3 connection, transaction submission, and data verification
 """
 
+import os 
 from web3 import Web3
 from eth_account import Account
 import json
@@ -34,20 +35,12 @@ class BlockchainClient:
         print("BLOCKCHAIN CLIENT INITIALIZATION")
         print("=" * 70)
         
-        # Connect to Ganache
-import os
-from web3 import Web3
-
-blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
-self.w3 = Web3(Web3.HTTPProvider(blockchain_url))        
+       # Connect to blockchain
+        blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
+        self.w3 = Web3(Web3.HTTPProvider(blockchain_url))
+        
         # Verify connection
         if not self.w3.is_connected():
-            raise ConnectionError(
-                f"Failed to connect to blockchain at {config.GANACHE_URL}\n"
-                "Make sure Ganache is running!"
-            )
-        
-        print(f"Connected to blockchain: {config.GANACHE_URL}")
         
         # Set default account
         self.account = config.OWNER_ADDRESS
