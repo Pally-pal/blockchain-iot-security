@@ -23,7 +23,7 @@ class BlockchainClient:
     Client for interacting with Ethereum blockchain and IoT smart contract
     """
     
-  def __init__(self, contract_address: Optional[str] = None, contract_abi: Optional[list] = None):
+ def __init__(self, contract_address: Optional[str] = None, contract_abi: Optional[list] = None):
         """
         Initialize blockchain client
         
@@ -65,6 +65,7 @@ class BlockchainClient:
             self._load_contract_from_file()
         
         print("=" * 70)
+     
     
     def _load_contract_from_file(self):
         """Load contract info from contract_info.json"""
