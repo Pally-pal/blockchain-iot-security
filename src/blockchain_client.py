@@ -23,7 +23,7 @@ class BlockchainClient:
     Client for interacting with Ethereum blockchain and IoT smart contract
     """
     
-    def __init__(self, contract_address: Optional[str] = None, contract_abi: Optional[list] = None):
+  def __init__(self, contract_address: Optional[str] = None, contract_abi: Optional[list] = None):
         """
         Initialize blockchain client
         
@@ -35,12 +35,18 @@ class BlockchainClient:
         print("BLOCKCHAIN CLIENT INITIALIZATION")
         print("=" * 70)
         
-       # Connect to blockchain
+        # Connect to blockchain
         blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
         self.w3 = Web3(Web3.HTTPProvider(blockchain_url))
         
         # Verify connection
         if not self.w3.is_connected():
+            raise ConnectionError(
+                f"Failed to connect to blockchain at {blockchain_url}\n"
+                "Check your ALCHEMY_URL environment variable!"
+            )
+        
+        print(f"Connected to blockchain: {blockchain_url}")
         
         # Set default account
         self.account = config.OWNER_ADDRESS
