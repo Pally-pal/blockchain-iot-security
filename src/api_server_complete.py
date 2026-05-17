@@ -4,6 +4,7 @@ REST API Server for IoT Blockchain Security System
 Provides endpoints for data registration, verification, and system status
 """
 
+from flask import Flask, send_from_directory
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
@@ -20,7 +21,9 @@ from iot_security_system import IoTSecuritySystem
 from crypto_utils import CryptoHasher
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, 
+    static_folder='../frontend',
+    static_url_path='')
 CORS(app)  # Enable CORS for all routes
 
 # Initialize security system (global instance)
@@ -34,7 +37,9 @@ print(" API Server Ready!")
 # API ENDPOINTS
 # ============================================================================
 
-@app.route('/', methods=['GET'])
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
 def home():
     """API home endpoint with documentation"""
     return jsonify({
