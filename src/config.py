@@ -36,8 +36,8 @@ class Config:
     NETWORK_ID = int(os.getenv("NETWORK_ID", 1337))
     
     # Account Configuration (Ganache Default First Account - has 100 ETH by default)
-    OWNER_ADDRESS = os.getenv("OWNER_ADDRESS", "0xB301253550f753Cbe4f8bA8456A836B41499C990")
-    OWNER_PRIVATE_KEY = os.getenv("OWNER_PRIVATE_KEY", "0x79f00496a7382d5bddcb779cb4873c82855ac350b1deb7e11af678ea89b3cc71")
+    OWNER_ADDRESS = os.getenv("OWNER_ADDRESS", "")
+    OWNER_PRIVATE_KEY = os.getenv("OWNER_PRIVATE_KEY", "")
     
     # Smart Contract Configuration
     GAS_LIMIT = 3000000
