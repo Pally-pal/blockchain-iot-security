@@ -35,11 +35,22 @@ class BlockchainClient:
         print("=" * 70)
         print("BLOCKCHAIN CLIENT INITIALIZATION")
         print("=" * 70)
+<<<<<<< Updated upstream
 
         # Connect to blockchain (Alchemy/Sepolia in production, Ganache locally)
         blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
         self.w3 = Web3(Web3.HTTPProvider(blockchain_url))
 
+=======
+        
+        # Connect to Ganache
+        import os
+        from web3 import Web3
+
+        blockchain_url = os.getenv("ALCHEMY_URL", "http://127.0.0.1:8545")
+        self.w3 = Web3(Web3.HTTPProvider(blockchain_url))
+        
+>>>>>>> Stashed changes
         # Verify connection
         if not self.w3.is_connected():
             raise ConnectionError(

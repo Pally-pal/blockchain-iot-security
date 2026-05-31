@@ -3,6 +3,8 @@
 Frontend Server - Serves the IoT Blockchain Security frontend
 Run this to serve the frontend on a separate port from the API
 """
+# At the top of serve.py
+from ml_module import ml_blueprint, init_predictor
 
 import os
 import sys

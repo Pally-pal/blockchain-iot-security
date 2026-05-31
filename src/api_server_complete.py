@@ -4,7 +4,11 @@ REST API Server for IoT Blockchain Security System
 Provides endpoints for data registration, verification, and system status
 """
 
+<<<<<<< Updated upstream
 from flask import Flask, send_from_directory
+=======
+from ml_module import ml_blueprint, init_predictor
+>>>>>>> Stashed changes
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
@@ -21,9 +25,15 @@ from iot_security_system import IoTSecuritySystem
 from crypto_utils import CryptoHasher
 
 # Initialize Flask app
+<<<<<<< Updated upstream
 app = Flask(__name__, 
     static_folder='../frontend',
     static_url_path='')
+=======
+app = Flask(__name__)
+app.register_blueprint(ml_blueprint)
+ml = init_predictor('ml_outputs/best_iot_model.pkl')
+>>>>>>> Stashed changes
 CORS(app)  # Enable CORS for all routes
 
 # Initialize security system (global instance)
@@ -162,118 +172,59 @@ def health_check():
 
 @app.route('/api/register', methods=['POST'])
 def register_data():
-    """
-    Register IoT data on blockchain
-    
-    Expected JSON:
-    {
-        "device_id": "DEVICE_001",
-        "sensor_data": {
-            "temperature": 25.5,
-            "humidity": 60.2
-        }
-    }
-    """
     try:
         data = request.get_json()
-        
-        # Validate input
+
         if not data:
             return jsonify({
                 'success': False,
                 'error': 'No data provided'
             }), 400
-        
-        device_id = data.get('device_id')
+
+        device_id   = data.get('device_id')
         sensor_data = data.get('sensor_data')
-        
+
         if not device_id or not sensor_data:
             return jsonify({
                 'success': False,
                 'error': 'Missing device_id or sensor_data'
             }), 400
-        
-        # Generate hash
+
+        ml_result = ml.predict(sensor_data)
+
         data_hash = hasher.generate_sha256_hash(sensor_data)
-        
-        # Register on blockchain
+
         result = security_system.blockchain.register_data_hash(
             data_hash,
             device_id
         )
-        
+
         if result.get('success'):
             return jsonify({
-                'success': True,
-                'message': 'Data registered successfully on blockchain',
-                'data_hash': data_hash,
-                'tx_hash': result.get('tx_hash'),
-                'block_number': result.get('block_number'),
-                'gas_used': result.get('gas_used'),
-                'device_id': device_id,
-                'timestamp': datetime.now().isoformat()
+                'success':     True,
+                'message':     'Data registered successfully on blockchain',
+                'data_hash':   data_hash,
+                'tx_hash':     result.get('tx_hash'),
+                'block_number':result.get('block_number'),
+                'gas_used':    result.get('gas_used'),
+                'device_id':   device_id,
+                'timestamp':   datetime.now().isoformat(),
+                'ml_check':    ml_result,
             }), 201
         else:
             return jsonify({
-                'success': False,
-                'error': result.get('error', 'Registration failed'),
-                'data_hash': data_hash
+                'success':  False,
+                'error':    result.get('error', 'Registration failed'),
+                'data_hash':data_hash,
+                'ml_check': ml_result,
             }), 500
-        
+
     except Exception as e:
         return jsonify({
             'success': False,
             'error': str(e)
         }), 500
-
-@app.route('/api/verify', methods=['POST'])
-def verify_data():
-    """
-    Verify data integrity against blockchain
     
-    Expected JSON:
-    {
-        "sensor_data": {
-            "temperature": 25.5,
-            "humidity": 60.2
-        }
-    }
-    """
-    try:
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({
-                'success': False,
-                'error': 'No data provided'
-            }), 400
-        
-        sensor_data = data.get('sensor_data')
-        
-        if not sensor_data:
-            return jsonify({
-                'success': False,
-                'error': 'Missing sensor_data'
-            }), 400
-        
-        # Verify integrity
-        result = security_system.verify_data_integrity(sensor_data)
-        
-        return jsonify({
-            'success': True,
-            'integrity_verified': result['integrity_verified'],
-            'message': result['message'],
-            'computed_hash': result['computed_hash'],
-            'blockchain_record': result.get('blockchain_record', {}),
-            'timestamp': datetime.now().isoformat()
-        }), 200
-        
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
 @app.route('/api/hash', methods=['POST'])
 def generate_hash():
     """
