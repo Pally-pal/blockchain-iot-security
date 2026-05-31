@@ -232,7 +232,7 @@ def init_predictor(model_path: str):
     return _predictor
 
 
-@ml_blueprint.route('/api/predict', methods=['POST'])
+@ml_blueprint.route('/predict', methods=['GET', 'POST'])
 def predict():
     """
     Standalone prediction endpoint — no blockchain registration.
@@ -285,7 +285,7 @@ def predict():
     }), 200
 
 
-@ml_blueprint.route('/api/ml/stats', methods=['GET'])
+@ml_blueprint.route('/stats', methods=['GET'])
 def ml_stats():
     """Returns ML model metadata and runtime detection statistics."""
     if _predictor is None:
