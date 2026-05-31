@@ -5,7 +5,7 @@ Provides endpoints for data registration, verification, and system status
 """
 
 from ml_module import ml_blueprint, init_predictor
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 import json
@@ -36,10 +36,7 @@ print(" API Server Ready!")
 # ============================================================================
 # API ENDPOINTS
 # ============================================================================
-
-@app.route('/')
-def serve_frontend():
-    return send_from_directory(app.static_folder, 'index.html')
+@app.route('/', methods=['GET'])
 def home():
     """API home endpoint with documentation"""
     return jsonify({
