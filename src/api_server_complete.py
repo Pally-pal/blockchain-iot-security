@@ -22,7 +22,7 @@ from crypto_utils import CryptoHasher
 
 # Initialize Flask app
 app = Flask(__name__)
-app.register_blueprint(ml_blueprint)
+app.register_blueprint(ml_blueprint, url_prefix='/api/ml')
 ml = init_predictor('ml_outputs/best_iot_model.pkl')
 CORS(app)  # Enable CORS for all routes
 
