@@ -4,12 +4,8 @@ REST API Server for IoT Blockchain Security System
 Provides endpoints for data registration, verification, and system status
 """
 
-<<<<<<< Updated upstream
-from flask import Flask, send_from_directory
-=======
 from ml_module import ml_blueprint, init_predictor
->>>>>>> Stashed changes
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import json
@@ -25,15 +21,9 @@ from iot_security_system import IoTSecuritySystem
 from crypto_utils import CryptoHasher
 
 # Initialize Flask app
-<<<<<<< Updated upstream
-app = Flask(__name__, 
-    static_folder='../frontend',
-    static_url_path='')
-=======
 app = Flask(__name__)
 app.register_blueprint(ml_blueprint)
 ml = init_predictor('ml_outputs/best_iot_model.pkl')
->>>>>>> Stashed changes
 CORS(app)  # Enable CORS for all routes
 
 # Initialize security system (global instance)
