@@ -5,7 +5,7 @@ Provides endpoints for data registration, verification, and system status
 """
 
 from ml_module import ml_blueprint, init_predictor
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import json
@@ -21,7 +21,7 @@ from iot_security_system import IoTSecuritySystem
 from crypto_utils import CryptoHasher
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 app.register_blueprint(ml_blueprint, url_prefix='/api/ml')
 ml = init_predictor('ml_outputs/best_iot_model.pkl')
 CORS(app)  # Enable CORS for all routes
@@ -36,24 +36,10 @@ print(" API Server Ready!")
 # ============================================================================
 # API ENDPOINTS
 # ============================================================================
-@app.route('/', methods=['GET'])
-def home():
-    """API home endpoint with documentation"""
-    return jsonify({
-        'service': 'IoT Blockchain Security System API',
-        'version': '1.0.0',
-        'author': 'Oyelade Paul Oluwafemi',
-        'endpoints': {
-            '/api/health': 'GET - System health check',
-            '/api/register': 'POST - Register IoT data on blockchain',
-            '/api/verify': 'POST - Verify data integrity',
-            '/api/audit': 'GET - Get system audit report',
-            '/api/records': 'GET - Get total blockchain records',
-            '/api/stats': 'GET - Get system statistics',
-            '/api/hash': 'POST - Generate hash for data'
-        },
-        'documentation': '/api/docs'
-    })
+
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/docs', methods=['GET'])
 def documentation():
