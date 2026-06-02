@@ -252,24 +252,63 @@ async function handleRegister(e) {
         const data = await response.json();
         const resultDiv = document.getElementById('registerResult');
         if (data.success) {
-            showAlert('Data registered successfully!', 'success');
-            resultDiv.innerHTML = `
-                <div class="result-box success">
-                    <h6 class="text-success mb-3"><i class="bi bi-check-circle"></i> Registration Successful</h6>
-                    <table class="table table-sm table-borderless">
-                        <tr><td><strong>Device ID:</strong></td><td>${data.device_id}</td></tr>
-                        <tr><td><strong>Sensors:</strong></td><td>${Object.keys(sensorData).join(', ')}</td></tr>
-                        <tr><td><strong>Data Hash:</strong></td><td><code class="small">${data.data_hash}</code></td></tr>
-                        <tr><td><strong>TX Hash:</strong></td><td><code class="small">${data.tx_hash}</code></td></tr>
-                        <tr><td><strong>Block Number:</strong></td><td>${data.block_number}</td></tr>
-                        <tr><td><strong>Gas Used:</strong></td><td>${data.gas_used}</td></tr>
-                        <tr><td><strong>Timestamp:</strong></td><td>${new Date(data.timestamp).toLocaleString()}</td></tr>
-                    </table>
-                    <button class="btn btn-sm btn-primary" onclick="copyToClipboard('${data.data_hash}')">
-                        <i class="bi bi-clipboard"></i> Copy Hash
-                    </button>
-                </div>`;
-            document.getElementById('registerForm').reset();
+    const ml = data.ml_check;
+    const isAnomaly = ml?.is_anomaly;
+
+    // Show alert based on ML result
+    if (isAnomaly) {
+        showAlert(`⚠️ ANOMALY DETECTED — ${ml.label} (Score: ${ml.anomaly_score}) — Data registered but flagged!`, 'warning');
+    } else {
+        showAlert('Data registered successfully!', 'success');
+    }
+
+    // Build ML badge
+    const mlBadge = ml ? `
+        <tr>
+            <td colspan="2">
+                <div style="
+                    padding: 10px;
+                    border-radius: 6px;
+                    margin-top: 8px;
+                    background: ${isAnomaly ? '#fff3cd' : '#d1e7dd'};
+                    border: 1px solid ${isAnomaly ? '#ffc107' : '#0f5132'};
+                ">
+                    <strong>🤖 ML Anomaly Detection</strong><br>
+                    <span style="color:${isAnomaly ? '#856404' : '#0f5132'}; font-weight:bold; font-size:1.1em;">
+                        ${isAnomaly ? '⚠️ ANOMALY DETECTED' : '✅ NORMAL'}
+                    </span><br>
+                    <small>
+                        Score: <strong>${ml.anomaly_score}</strong> &nbsp;|&nbsp;
+                        Confidence: <strong>${ml.confidence}</strong> &nbsp;|&nbsp;
+                        Model: ${ml.model} &nbsp;|&nbsp;
+                        Latency: ${ml.latency_ms}ms
+                    </small>
+                </div>
+            </td>
+        </tr>` : '';
+
+    resultDiv.innerHTML = `
+        <div class="result-box ${isAnomaly ? 'warning' : 'success'}"
+             style="border: 2px solid ${isAnomaly ? '#ffc107' : '#198754'}">
+            <h6 class="${isAnomaly ? 'text-warning' : 'text-success'} mb-3">
+                <i class="bi bi-${isAnomaly ? 'exclamation-triangle' : 'check-circle'}"></i>
+                Registration Successful ${isAnomaly ? '— ⚠️ Anomaly Flagged' : ''}
+            </h6>
+            <table class="table table-sm table-borderless">
+                <tr><td><strong>Device ID:</strong></td><td>${data.device_id}</td></tr>
+                <tr><td><strong>Sensors:</strong></td><td>${Object.keys(sensorData).join(', ')}</td></tr>
+                <tr><td><strong>Data Hash:</strong></td><td><code class="small">${data.data_hash}</code></td></tr>
+                <tr><td><strong>TX Hash:</strong></td><td><code class="small">${data.tx_hash}</code></td></tr>
+                <tr><td><strong>Block Number:</strong></td><td>${data.block_number}</td></tr>
+                <tr><td><strong>Gas Used:</strong></td><td>${data.gas_used}</td></tr>
+                <tr><td><strong>Timestamp:</strong></td><td>${new Date(data.timestamp).toLocaleString()}</td></tr>
+                ${mlBadge}
+            </table>
+            <button class="btn btn-sm btn-primary" onclick="copyToClipboard('${data.data_hash}')">
+                <i class="bi bi-clipboard"></i> Copy Hash
+            </button>
+        </div>`;
+        document.getElementById('registerForm').reset();
             document.getElementById('sensorReadings').innerHTML = '';
             document.getElementById('customFields').innerHTML = '';
             setTimeout(() => addSensorReading(), 100);
