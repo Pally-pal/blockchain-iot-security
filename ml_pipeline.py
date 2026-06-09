@@ -656,13 +656,21 @@ if __name__ == "__main__":
     df = pd.read_csv('sensor_data.csv')
     df['label'] = 0   # then define anomalies based on your criteria
     print("\n[0/6] Loading real IoT sensor dataset...")
-    # Flag anomalies based on physically implausible values
-    df.loc[df['temp'] > 50, 'label'] = 1          # extreme temperature
-    df.loc[df['co'] > 0.03, 'label'] = 1          # very high CO
-    df.loc[df['smoke'] > 0.1, 'label'] = 1        # very high smoke
-    df.loc[df['lpg'] > 0.06, 'label'] = 1         # very high LPG
-    df.loc[df['humidity'] < 5, 'label'] = 1       # implausibly dry
-    df.loc[df['temp'] < 0, 'label'] = 1           # below zero
+  
+    # Thresholds based on real dataset value ranges
+# Normal ranges: temp(0-30°C), co(0.001-0.008), smoke(0.007-0.028), lpg(0.003-0.010)
+
+# High-value anomalies (above 99th percentile — statistically extreme)
+    df.loc[df['temp'] > 29, 'label'] = 1          # above p99
+    df.loc[df['co'] > 0.008, 'label'] = 1         # above p99
+    df.loc[df['smoke'] > 0.030, 'label'] = 1      # above p99
+    df.loc[df['lpg'] > 0.011, 'label'] = 1        # above p99
+
+# Low-value anomalies (sensor fault / implausible readings)
+    df.loc[df['temp'] < 5, 'label'] = 1           # unusually cold
+    df.loc[df['humidity'] < 10, 'label'] = 1      # implausibly dry
+    df.loc[df['humidity'] > 95, 'label'] = 1      # pegged high — sensor fault
+    df.loc[df['co'] < 0.001, 'label'] = 1         # flat zero — sensor fault
     df.to_csv(f"{OUT}/synthetic_dataset.csv", index=False)
     print(f"    Dataset shape: {df.shape}")
 
