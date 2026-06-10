@@ -93,6 +93,10 @@ class MLPredictor:
         except Exception as e:
             print(f"[ML] ❌  Failed to load model: {e}")
 
+def _build_feature_row(self, sensor_data: dict) -> pd.DataFrame:
+    """Convert raw sensor dict → scaled feature row ready for inference."""
+    row = {}
+
     # Base features — with frontend field name aliases
     aliases = {
         'temp':       ['temp', 'temperature'],
@@ -117,24 +121,24 @@ class MLPredictor:
         elif isinstance(val, str):
             val = 1 if val.lower() in ('true', '1', 'yes') else 0
         row[col] = float(val)
-        df_r = pd.DataFrame([row])
 
-        # Engineered features (must match training pipeline exactly)
-        if all(c in df_r for c in ['co', 'lpg', 'smoke']):
-            df_r['gas_index']    = df_r['co'] + df_r['lpg'] + df_r['smoke']
-            df_r['co_lpg_ratio'] = df_r['co'] / (df_r['lpg'] + 1e-9)
-        if all(c in df_r for c in ['temp', 'humidity']):
-            df_r['heat_index'] = df_r['temp'] * (1 + 0.33 * df_r['humidity'] / 100)
-        if all(c in df_r for c in ['co', 'temp']):
-            df_r['co_temp'] = df_r['co'] * df_r['temp']
+    df_r = pd.DataFrame([row])
 
-        # Align to exact training columns
-        df_r = df_r.reindex(columns=self.feature_cols, fill_value=0.0)
+    # Engineered features (must match training pipeline exactly)
+    if all(c in df_r for c in ['co', 'lpg', 'smoke']):
+        df_r['gas_index']    = df_r['co'] + df_r['lpg'] + df_r['smoke']
+        df_r['co_lpg_ratio'] = df_r['co'] / (df_r['lpg'] + 1e-9)
+    if all(c in df_r for c in ['temp', 'humidity']):
+        df_r['heat_index'] = df_r['temp'] * (1 + 0.33 * df_r['humidity'] / 100)
+    if all(c in df_r for c in ['co', 'temp']):
+        df_r['co_temp'] = df_r['co'] * df_r['temp']
 
-        # Scale
-        X_scaled = self.scaler.transform(df_r)
-        return X_scaled
+    # Align to exact training columns
+    df_r = df_r.reindex(columns=self.feature_cols, fill_value=0.0)
 
+    # Scale
+    X_scaled = self.scaler.transform(df_r)
+    return X_scaled
     def predict(self, sensor_data: dict) -> dict:
         """
         Run ML prediction on a sensor reading.
