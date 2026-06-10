@@ -93,21 +93,30 @@ class MLPredictor:
         except Exception as e:
             print(f"[ML] ❌  Failed to load model: {e}")
 
-    def _build_feature_row(self, sensor_data: dict) -> pd.DataFrame:
-        """Convert raw sensor dict → scaled feature row ready for inference."""
-        row = {}
-
-        # Base features
-        for col, default in self.FEATURE_DEFAULTS.items():
-            val = sensor_data.get(col, sensor_data.get(
-                col.replace('_enc', ''), default))
-            # Handle booleans
-            if isinstance(val, bool):
-                val = int(val)
-            elif isinstance(val, str):
-                val = 1 if val.lower() in ('true', '1', 'yes') else 0
-            row[col] = float(val)
-
+    # Base features — with frontend field name aliases
+    aliases = {
+        'temp':       ['temp', 'temperature'],
+        'co':         ['co', 'carbon_monoxide'],
+        'humidity':   ['humidity'],
+        'smoke':      ['smoke'],
+        'lpg':        ['lpg'],
+        'light':      ['light'],
+        'motion':     ['motion'],
+        'device_enc': ['device_enc'],
+    }
+    for col, keys in aliases.items():
+        val = None
+        for key in keys:
+            if key in sensor_data:
+                val = sensor_data[key]
+                break
+        if val is None:
+            val = self.FEATURE_DEFAULTS.get(col, 0)
+        if isinstance(val, bool):
+            val = int(val)
+        elif isinstance(val, str):
+            val = 1 if val.lower() in ('true', '1', 'yes') else 0
+        row[col] = float(val)
         df_r = pd.DataFrame([row])
 
         # Engineered features (must match training pipeline exactly)
